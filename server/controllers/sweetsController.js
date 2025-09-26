@@ -19,3 +19,16 @@ exports.addSweet = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+// @desc    Get all sweets
+// @route   GET /api/sweets
+// @access  Private
+exports.getAllSweets = async (req, res) => {
+  try {
+    const sweets = await Sweet.find();
+    res.json(sweets);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};

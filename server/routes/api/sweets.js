@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../../middleware/authMiddleware');
-const { addSweet } = require('../../controllers/sweetsController');
+const { addSweet, getAllSweets } = require('../../controllers/sweetsController');
 
-// Apply the auth middleware to this route
+// @route   POST /api/sweets
+// @desc    Add a new sweet
 router.post('/', authMiddleware, addSweet);
+
+// @route   GET /api/sweets
+// @desc    Get all sweets
+router.get('/', authMiddleware, getAllSweets);
 
 module.exports = router;
