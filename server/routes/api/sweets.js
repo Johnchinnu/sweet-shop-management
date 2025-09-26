@@ -1,19 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const authMiddleware = require('../../middleware/authMiddleware');
+const {
+  authMiddleware,
+  isAdmin,
+} = require('../../middleware/authMiddleware');
 const {
   addSweet,
   getAllSweets,
   updateSweet,
+  deleteSweet,
 } = require('../../controllers/sweetsController');
 
-// @route   POST /api/sweets
+// POST /api/sweets
 router.post('/', authMiddleware, addSweet);
 
-// @route   GET /api/sweets
+// GET /api/sweets
 router.get('/', authMiddleware, getAllSweets);
 
-// @route   PUT /api/sweets/:id
+// PUT /api/sweets/:id
 router.put('/:id', authMiddleware, updateSweet);
+
+// DELETE /api/sweets/:id (Admin Only)
+router.delete('/:id', [authMiddleware, isAdmin], deleteSweet);
 
 module.exports = router;

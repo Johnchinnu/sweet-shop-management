@@ -53,3 +53,23 @@ exports.updateSweet = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+// @desc    Delete a sweet
+// @route   DELETE /api/sweets/:id
+// @access  Private/Admin
+exports.deleteSweet = async (req, res) => {
+  try {
+    const sweet = await Sweet.findById(req.params.id);
+
+    if (!sweet) {
+      return res.status(404).json({ msg: 'Sweet not found' });
+    }
+
+    await Sweet.findByIdAndDelete(req.params.id);
+
+    res.json({ msg: 'Sweet removed' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
