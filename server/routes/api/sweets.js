@@ -8,6 +8,7 @@ const {
   deleteSweet,
   searchSweets,
   purchaseSweet,
+  restockSweet,
 } = require('../../controllers/sweetsController');
 
 router.get('/search', authMiddleware, searchSweets);
@@ -16,5 +17,6 @@ router.get('/', authMiddleware, getAllSweets);
 router.put('/:id', authMiddleware, updateSweet);
 router.delete('/:id', [authMiddleware, isAdmin], deleteSweet);
 router.post('/:id/purchase', authMiddleware, purchaseSweet);
+router.post('/:id/restock', [authMiddleware, isAdmin], restockSweet);
 
 module.exports = router;
