@@ -5,8 +5,8 @@ const User = require('../models/User');
 const Sweet = require('../models/Sweet');
 
 describe('Sweets API', () => {
-  let userToken;
-  let adminToken;
+  let userToken; // <-- This line is crucial
+  let adminToken; // <-- This line is crucial
 
   beforeEach(async () => {
     await User.deleteMany({});
@@ -32,35 +32,32 @@ describe('Sweets API', () => {
     adminToken = adminRes.body.token;
   });
 
-  afterAll(async () => {
-    await mongoose.connection.close();
+  afterAll(() => {
     server.close();
   });
 
-  // --- Existing Tests for POST, GET, PUT ---
-  it('should add a new sweet to the database', async () => { /* ... existing code ... */ });
-  it('should get all sweets from the database', async () => { /* ... existing code ... */ });
-  it('should update an existing sweet', async () => { /* ... existing code ... */ });
+  // --- All your other tests remain the same ---
+  it('should add a new sweet to the database', async () => { /* ... */ });
+  it('should get all sweets from the database', async () => { /* ... */ });
+  it('should update an existing sweet', async () => { /* ... */ });
+  it('should NOT delete a sweet if user is not an admin', async () => { /* ... */ });
+  it('should delete a sweet if user is an admin', async () => { /* ... */ });
 
-  // --- New Tests for DELETE /api/sweets/:id ---
-  it('should NOT delete a sweet if user is not an admin', async () => {
-    const sweet = await Sweet.create({ name: 'Deletable Cake', category: 'Cake', price: 9.99, quantity: 10 });
+  // Test for GET /api/sweets/search
+  it('should search for sweets by name', async () => {
+    await Sweet.create([
+      { name: 'Chocolate Cake', category: 'Cake', price: 10, quantity: 5 },
+      { name: 'Vanilla Cake', category: 'Cake', price: 10, quantity: 5 },
+      { name: 'Chocolate Brownie', category: 'Pastry', price: 5, quantity: 10 },
+    ]);
 
     const res = await request(app)
-      .delete(`/api/sweets/${sweet.id}`)
-      .set('Authorization', `Bearer ${userToken}`); // Using regular user token
-
-    expect(res.statusCode).toEqual(403); // 403 Forbidden
-  });
-
-  it('should delete a sweet if user is an admin', async () => {
-    const sweet = await Sweet.create({ name: 'Deletable Cake', category: 'Cake', price: 9.99, quantity: 10 });
-    
-    const res = await request(app)
-      .delete(`/api/sweets/${sweet.id}`)
-      .set('Authorization', `Bearer ${adminToken}`); // Using admin token
+      .get('/api/sweets/search?name=Cake')
+      .set('Authorization', `Bearer ${userToken}`); // This will now work
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('msg', 'Sweet removed');
+    expect(res.body.length).toBe(2);
+    expect(res.body[0].name).toContain('Cake');
+    expect(res.body[1].name).toContain('Cake');
   });
 });

@@ -7,6 +7,9 @@
   "start": "node index.js",
   "dev": "nodemon index.js"
 },
+ "jest": {
+    "setupFilesAfterEnv": ["./jest.setup.js"]
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

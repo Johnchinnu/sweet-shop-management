@@ -73,3 +73,28 @@ exports.deleteSweet = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+exports.searchSweets = async (req, res) => {
+  try {
+    const { name, category, minPrice, maxPrice } = req.query;
+    const query = {};
+
+    if (name) {
+      query.name = { $regex: name, $options: 'i' }; // Case-insensitive search
+    }
+    if (category) {
+      query.category = { $regex: category, $options: 'i' };
+    }
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = parseFloat(minPrice);
+      if (maxPrice) query.price.$lte = parseFloat(maxPrice);
+    }
+
+    const sweets = await Sweet.find(query);
+    res.json(sweets);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};

@@ -9,7 +9,12 @@ const {
   getAllSweets,
   updateSweet,
   deleteSweet,
+  searchSweets,
 } = require('../../controllers/sweetsController');
+
+
+// GET /api/sweets/search -> Must be before /:id
+router.get('/search', authMiddleware, searchSweets);
 
 // POST /api/sweets
 router.post('/', authMiddleware, addSweet);

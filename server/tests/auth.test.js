@@ -11,11 +11,9 @@ describe('Auth API', () => {
     await User.deleteMany({});
   });
 
-  // After all tests are done, close connections
-  afterAll(async () => {
-    await mongoose.connection.close();
-    server.close();
-  });
+afterAll(() => {
+  server.close();
+});
 
   // Test for User Registration
   it('should register a new user and return a token', async () => {
