@@ -7,10 +7,7 @@ connectDB();
 const app = express();
 
 // Init Middleware to parse JSON request bodies.
-// THIS WAS THE MISSING LINE.
 app.use(express.json());
-
-const PORT = process.env.PORT || 5001;
 
 app.get('/', (req, res) => {
   res.send('Sweet Shop API is running!');
@@ -19,10 +16,11 @@ app.get('/', (req, res) => {
 // Define Routes
 app.use('/api/auth', require('./routes/api/auth'));
 
+const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
 // For testing purposes
-module.exports = app;
+module.exports = { app, server };
