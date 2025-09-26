@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User'); // We need the User model to check the role
+const User = require('../models/User');
 
-// Middleware to check for a valid token
 exports.authMiddleware = function (req, res, next) {
   const authHeader = req.header('Authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -17,7 +16,6 @@ exports.authMiddleware = function (req, res, next) {
   }
 };
 
-// Middleware to check if the user is an admin
 exports.isAdmin = async function (req, res, next) {
   try {
     const user = await User.findById(req.user.id);
